@@ -53,7 +53,7 @@ pipeline{
             steps{
                 script {
                         withCredentials([usernamePassword(credentialsId: 'nexus-user-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
-                        sh 'docker login http://13.233.227.174:8085/repository/docker-hosted-repo/ -u admin -p ${PASSWORD}'
+                        sh 'docker login http://13.233.227.174:8085/repository/docker-hosted-repo/ -u admin --password-stdin ${PASSWORD}'
                         echo "Push Docker Image to Nexus : IN PROGRESS"
 
                         sh 'docker push 13.233.227.174:8085/nexus-deploy'
