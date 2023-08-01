@@ -11,32 +11,32 @@ pipeline{
 
     stages{
         stage('Code Compilation'){
-            steps{
+            stepss{
                 sh 'mvn clean compile'
             }
         }
 
         stage('Code Test'){
-            steps{
+            stepss{
                 sh 'mvn clean test'
             }
         }
 
         stage('Code Package'){
-            step{
+            steps{
                 sh 'mvn clean package'
             }
         }
 
         stage('Building and Tag Docker Image'){
-            step{
+            steps{
                 sh 'docker build -t mominhuzaifa/nexus-deploy .'
                 sh 'docker build -t nexus-deploy .'
             }
         }
 
         stage('Push image to docker hub'){
-            step{
+            steps{
                 script {
                         withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]){
                         echo "Login to DockerHub : IN PROGRESS"
@@ -50,7 +50,7 @@ pipeline{
     }
 
         stage('Push Docker Image to Nexus'){
-            step{
+            steps{
                 script {
                         withCredentials([usernamePassword(credentialsId: 'nexus-user-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                         sh 'docker login http://13.233.227.174:8085/repository/docker-hosted-repo/ -u admin -p ${PASSWORD}'
@@ -64,7 +64,7 @@ pipeline{
     }
 
         stage('Delete docker image from Jenkins'){
-            step{
+            steps{
                 script{
                 sh 'docker rmi -f $(docker images -q)'
                 }
