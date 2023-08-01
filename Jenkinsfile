@@ -47,6 +47,7 @@ pipeline{
                         }
             }
         }
+    }
 
         stage('Push Docker Image to Nexus'){
             step{
@@ -60,11 +61,13 @@ pipeline{
                         }
             }
         }
+    }
 
         stage('Delete docker image from Jenkins'){
             step{
                 script{
                 sh 'docker rmi -f $(docker images -q)'
+                }
             }
         }
     }
