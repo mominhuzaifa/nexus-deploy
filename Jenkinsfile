@@ -53,6 +53,7 @@ pipeline{
                   script {
                      withCredentials([credentialsId:'ecr-creds', url:"150387322390.dkr.ecr.ap-south-1.amazonaws.com/docker-imgs"]){
                      sh """
+                     aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 150387322390.dkr.ecr.ap-south-1.amazonaws.com
                      echo "List the docker images present in local"
                      docker images
                      echo "Tagging the Docker Image: In Progress"
