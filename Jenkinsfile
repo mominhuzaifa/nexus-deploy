@@ -27,7 +27,7 @@ pipeline{
                 sh 'mvn clean package'
             }
         }
-
+/***
         stage('Building and Tag Docker Image'){
             steps{
                 sh 'docker build -t mominhuzaifa/nexus-deploy .'
@@ -47,20 +47,21 @@ pipeline{
                         }
             }
         }
-    }
+    }***/
     stage(' Docker Image Push to Amazon ECR') {
                steps {
                   script {
-                     withCredentials([[$class: 'AmazonECRLoginWrapper', credentialsId: 'ecr:ap-south-1:ecr-creds']]){
+                     withDockerRegistry([ credentialsId: 'ecr:ap-south-1:ecr-creds', url:'https://150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img']){
                      sh """
                      aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 150387322390.dkr.ecr.ap-south-1.amazonaws.com
+                     docker build -t python-docker-img .
                      echo "List the docker images present in local"
                      docker images
                      echo "Tagging the Docker Image: In Progress"
-                     docker tag docker-imgs:latest 150387322390.dkr.ecr.ap-south-1.amazonaws.com/docker-imgs:latest
+                     docker tag python-docker-img:latest 150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img:latest
                      echo "Tagging the Docker Image: Completed"
                      echo "Push Docker Image to ECR : In Progress"
-                     docker push 150387322390.dkr.ecr.ap-south-1.amazonaws.com/docker-imgs:latest
+                     docker push 150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img:latest
                      echo "Push Docker Image to ECR : Completed"
                      """
                      }
