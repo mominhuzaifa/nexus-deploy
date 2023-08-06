@@ -51,18 +51,13 @@ pipeline{
     stage(' Docker Image Push to Amazon ECR') {
                steps {
                   script {
-                     withCredentials([credentialsId:'ecr-creds', url:'https://150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img']){
+                     withDockerRegistry([credentialsId:'ecr-creds', url:'http://150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img']){
                      sh """
                      aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 150387322390.dkr.ecr.ap-south-1.amazonaws.com
                      docker build -t python-docker-img .
-                     echo "List the docker images present in local"
                      docker images
-                     echo "Tagging the Docker Image: In Progress"
                      docker tag python-docker-img:latest 150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img:latest
-                     echo "Tagging the Docker Image: Completed"
-                     echo "Push Docker Image to ECR : In Progress"
                      docker push 150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img:latest
-                     echo "Push Docker Image to ECR : Completed"
                      """
                      }
                   }
