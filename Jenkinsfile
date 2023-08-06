@@ -52,7 +52,7 @@ pipeline{
     stage(' Docker Image Push to Amazon ECR') {
                steps {
                   script {
-                     withCredentials([$class:'ExtendedChoiceParameterValue', credentialsId:'ecr-credential', url:'150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img']){
+                     withCredentials([credentialsId:'ecr-credential', url:'150387322390.dkr.ecr.ap-south-1.amazonaws.com/python-docker-img']){
                      sh """
                      aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 150387322390.dkr.ecr.ap-south-1.amazonaws.com
                      docker build -t python-docker-img .
