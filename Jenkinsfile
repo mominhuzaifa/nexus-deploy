@@ -48,6 +48,8 @@ pipeline{
             }
         }
     }***/
+    /***
+    // Push to public repository
     stage(' Docker Image Push to Amazon ECR') {
                steps {
                   script {
@@ -63,6 +65,24 @@ pipeline{
                   }
                }
             }
+    ***/
+
+    // Push to public repository
+    stage(' Docker Image Push to Amazon ECR') {
+                   steps {
+                      script {
+                         withDockerRegistry([credentialsId:'ecr-creds', url:'http://public.ecr.aws/r9p9p4w8/docker-py-img']){
+                         sh """
+                         aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/r9p9p4w8
+                         docker build -t docker-py-img .
+                         docker images
+                         docker tag docker-py-img:latest public.ecr.aws/r9p9p4w8/docker-py-img:latest
+                         docker push public.ecr.aws/r9p9p4w8/docker-py-img:latest
+                         """
+                         }
+                      }
+                   }
+                }
 /***
         stage('Push Docker Image to Nexus'){
             steps{
